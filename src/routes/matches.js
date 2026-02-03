@@ -33,7 +33,7 @@ matchRouter.post('/', async (req, res) => {
   const parsed = createMatchSchema.safeParse(req.body.data);
 
   if(!parsed.success)
-    return res.status(400).json({error: 'Invalid Payload', details: JSON.stringify(parsed.error)});
+    return res.status(400).json({error: 'Invalid Payload', details: JSON.stringify(parsed.error.issues)});
 
   const {data: {startTime, endTime, homeScore, awayScore } }  = parsed;
 
@@ -47,12 +47,16 @@ matchRouter.post('/', async (req, res) => {
       status: getMatchStatus(startTime, endTime)
     }).returning()
 
-    console.log('broadcast fn:', res.app.locals.broadcastMatchCreated)
-    if(res.app.locals.broadcastMatchCreated)
-      res.app.locals.broadcastMatchCreated(event)
+    if (typeof res.app.locals.broadcastMatchCreated === 'function') {
+      try {
+        res.app.locals.broadcastMatchCreated(event);
+        } catch (err) {
+        console.log('Failed to broadcast matchCreated', err.issues);
+        }
+    }
 
     res.status(201).json({ data: event});
   } catch (e) {
-    res.status(500).json({error: 'Failed to create match', details: JSON.stringify(e.message)});
+    res.status(500).json({error: 'Failed to create match', details: JSON.stringify(e.issues)});
   }
 })
