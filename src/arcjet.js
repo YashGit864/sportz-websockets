@@ -1,7 +1,7 @@
 import arcjet, {detectBot, shield, slidingWindow} from "@arcjet/node";
 
 const arcjetKey = process.env.ARCJET_KEY;
-const arcjetMode = process.env.ARCJET_MODE === 'DRY RUN' ? 'DRY RUN' : 'LIVE';
+const arcjetMode = process.env.ARCJET_MODE === 'DRY_RUN' ? 'DRY_RUN' : 'LIVE';
 
 export const httpArcjet = arcjetKey ?
   arcjet({
@@ -26,7 +26,7 @@ export const wsArcjet = arcjetKey ?
 
 export function securityMiddleware() {
   return async (req, res, next) => {
-    if(!httpArcjet) return next;
+    if(!httpArcjet) return next();
 
     try {
       const decision = await httpArcjet.protect(req)
