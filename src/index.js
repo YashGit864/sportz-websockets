@@ -14,8 +14,8 @@ const server = http.createServer(app);
 const {broadcastMatchCreated} = attachWebSocketServer(server);
 app.locals.broadcastMatchCreated = broadcastMatchCreated;
 
-app.get('/', (req, res) => res.send('Hello World!'));
 app.use(securityMiddleware())
+app.get('/', (req, res) => res.send('Hello World!'));
 app.use('/matches', matchRouter)
 
 server.listen(PORT, HOST, () => {
