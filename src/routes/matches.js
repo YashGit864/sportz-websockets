@@ -21,19 +21,17 @@ matchRouter.get('/', async (req, res) =>  {
       .from(matches)
       .orderBy(desc(matches.createdAt))
       .limit(limit)
-    res.status(200).json({data})
+    res.status(200).json({message: 'Matches list', data})
   } catch (error) {
     res.status(500).json({error: 'Failed to fetch matches'});
   }
-
-  res.status(200).json({message: 'Matches List'});
 });
 
 matchRouter.post('/', async (req, res) => {
   const parsed = createMatchSchema.safeParse(req.body.data);
 
   if(!parsed.success)
-    return res.status(400).json({error: 'Invalid Payload', details: JSON.stringify(parsed.error.issues)});
+    return res.status(400).json({error: 'Invalid Payload', details: JSON.stringify(parsed.error)});
 
   const {data: {startTime, endTime, homeScore, awayScore } }  = parsed;
 
@@ -50,13 +48,13 @@ matchRouter.post('/', async (req, res) => {
     if (typeof res.app.locals.broadcastMatchCreated === 'function') {
       try {
         res.app.locals.broadcastMatchCreated(event);
-        } catch (err) {
-        console.log('Failed to broadcast matchCreated', err.issues);
-        }
+      } catch (err) {
+        console.warn('Failed to broadcast matchCreated', err);
+      }
     }
 
     res.status(201).json({ data: event});
   } catch (e) {
-    res.status(500).json({error: 'Failed to create match', details: JSON.stringify(e.issues)});
+    res.status(500).json({error: 'Failed to create match', details: JSON.stringify(e.message)});
   }
 })
