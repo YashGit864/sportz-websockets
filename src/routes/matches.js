@@ -21,12 +21,10 @@ matchRouter.get('/', async (req, res) =>  {
       .from(matches)
       .orderBy(desc(matches.createdAt))
       .limit(limit)
-    res.status(200).json({data})
+    res.status(200).json({message: 'Matches list', data})
   } catch (error) {
     res.status(500).json({error: 'Failed to fetch matches'});
   }
-
-  res.status(200).json({message: 'Matches List'});
 });
 
 matchRouter.post('/', async (req, res) => {
@@ -46,6 +44,14 @@ matchRouter.post('/', async (req, res) => {
       awayScore: awayScore ?? 0,
       status: getMatchStatus(startTime, endTime)
     }).returning()
+
+    if (typeof res.app.locals.broadcastMatchCreated === 'function') {
+      try {
+        res.app.locals.broadcastMatchCreated(event);
+      } catch (err) {
+        console.warn('Failed to broadcast matchCreated', err);
+      }
+    }
 
     res.status(201).json({ data: event});
   } catch (e) {
