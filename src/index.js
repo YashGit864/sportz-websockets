@@ -21,7 +21,7 @@ const {broadcastMatchCreated, broadcastCommentary} = attachWebSocketServer(serve
 app.locals.broadcastMatchCreated = broadcastMatchCreated;
 app.locals.broadcastCommentary = broadcastCommentary;
 
-app.use(securityMiddleware())
+// app.use(securityMiddleware())
 app.get('/', (req, res) => res.send('Hello from Express Server!'));
 app.use('/matches', matchRouter)
 app.use('/matches/:id/commentary', commentaryRouter)
