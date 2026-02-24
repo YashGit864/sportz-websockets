@@ -18,19 +18,17 @@ export const matches = pgTable('matches', {
 });
 
 // Table: commentary
-export const commentary = pgTable('commentary', {
-  id: serial('id').primaryKey(),
-  matchId: integer('match_id')
-    .notNull()
-    .references(() => matches.id, { onDelete: 'cascade' }),
-  minute: integer('minute'),
-  sequence: integer('sequence').notNull(),
-  period: integer('period'),
-  eventType: text('event_type').notNull(),
-  actor: text('actor'),
-  team: text('team'),
-  message: text('message').notNull(),
-  metadata: jsonb('metadata'),
-  tags: text('tags').array(),
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+export const commentary = pgTable("commentary", {
+  id: serial("id").primaryKey(),
+  matchId: integer("match_id").notNull().references(() => matches.id, { onDelete: "cascade" }),
+  minute: integer("minute"),
+  sequence: integer("sequence").notNull(),
+  period: text("period").notNull(),
+  event_type: text("event_type").notNull(),
+  actor: text("actor"),
+  team: text("team"),
+  message: text("message").notNull(),
+  metadata: jsonb("metadata"),
+  tags: jsonb("tags"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
