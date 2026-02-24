@@ -57,11 +57,6 @@ commentaryRouter.post('/', async (req, res) => {
   try {
     const { minute, ...rest } = bodyResult.data;
 
-    console.log({
-      matchId: paramsResult.data.id,
-      minute,
-      ...rest
-    })
     const [result] = await db.insert(commentary).values({
       matchId: paramsResult.data.id,
       minute,
