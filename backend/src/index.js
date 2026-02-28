@@ -12,8 +12,6 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 // const HOST = process.env.HOST || '0.0.0.0';
 
-console.log("DATABASE_URL:", process.env.DATABASE_URL);
-
 app.use(express.json());
 const server = http.createServer(app);
 
