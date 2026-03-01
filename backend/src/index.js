@@ -7,10 +7,12 @@ import http from "http";
 import {attachWebSocketServer} from "./ws/server.js";
 import {securityMiddleware} from "./arcjet.js";
 import {commentaryRouter} from "./routes/commentary.js";
+import cors from "cors";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 // const HOST = process.env.HOST || '0.0.0.0';
+app.use(cors());
 
 app.use(express.json());
 const server = http.createServer(app);
@@ -19,7 +21,7 @@ const {broadcastMatchCreated, broadcastCommentary} = attachWebSocketServer(serve
 app.locals.broadcastMatchCreated = broadcastMatchCreated;
 app.locals.broadcastCommentary = broadcastCommentary;
 
-// app.use(securityMiddleware())
+app.use(securityMiddleware())
 app.get('/', (req, res) => res.send('Hello from Express Server!'));
 app.use('/matches', matchRouter)
 app.use('/matches/:id/commentary', commentaryRouter)
