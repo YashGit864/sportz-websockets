@@ -7,6 +7,7 @@ import http from "http";
 import {attachWebSocketServer} from "./ws/server.js";
 import {securityMiddleware} from "./arcjet.js";
 import {commentaryRouter} from "./routes/commentary.js";
+import cors from 'cors'
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -14,6 +15,7 @@ const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json());
 const server = http.createServer(app);
+app.use(cors())
 
 const {broadcastMatchCreated, broadcastCommentary} = attachWebSocketServer(server);
 app.locals.broadcastMatchCreated = broadcastMatchCreated;
